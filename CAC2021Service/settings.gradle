@@ -1,0 +1,2 @@
+rootProject.name = "CAC 2021 Service"
+include ':app'
