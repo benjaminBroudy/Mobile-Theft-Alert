@@ -1,5 +1,8 @@
 package com.example.cac2021service;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -8,16 +11,18 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.os.Vibrator;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 public class extension extends Service implements SensorEventListener {
 
     private MediaPlayer player;
-
-    boolean notEnabled = false;
 
     float[] accelerations = new float[90];
     float currentAcceleration = 0;
@@ -33,10 +38,12 @@ public class extension extends Service implements SensorEventListener {
     boolean alarmOn = false;
 
     private SensorManager sensorManager;
-    SensorEventListener listen;
-    private long lastUpdate;
+    private Vibrator vibrator;
 
     long initialTime = -1;
+
+    //should be low
+    double threshold = 0.5;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -44,12 +51,31 @@ public class extension extends Service implements SensorEventListener {
         player = MediaPlayer.create(this, Settings.System.DEFAULT_ALARM_ALERT_URI);
         player.setLooping(true);
 
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
         sensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
-        lastUpdate = System.currentTimeMillis();
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
 
-        return START_STICKY;
+        return START_NOT_STICKY;
+
+    }
+
+    @Override
+    public void onCreate() {
+
+        super.onCreate();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? createNotificationChannel(notificationManager) : "";
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setContentText("Alarm Enabled")
+                .build();
+
+        startForeground(42, notification);
 
     }
 
@@ -72,8 +98,8 @@ public class extension extends Service implements SensorEventListener {
 
         if (alarmOn) {
 
-            // play sound, vibrate
             player.start();
+            vibrator.vibrate(100);
 
         } else {
 
@@ -102,43 +128,29 @@ public class extension extends Service implements SensorEventListener {
 
             }
 
-            if (notEnabled) {
+            if ((currentAcceleration >= threshold) && !(initialTime > -1)) {
 
-                //change button to green
+                startStopwatch();
 
-            } else {
+            }
 
-                //change button to red
+            if (initialTime > -1) {
 
-                //make some sort of threashold, if in that threashold (like 0.03 to -0.03 or something)
-                //for certain amount of loops then make it stop alarm countdown
-                //if not stopped after full alarm countdown then start alarm (maybe make another threashold too, we will see how it goes)
+                if (currentAcceleration < threshold) {
 
-                if ((currentAcceleration >= 0.02) && !(initialTime > -1)) {
+                    timesZero++;
 
-                    startStopwatch();
+                    if (timesZero > 9) {
 
-                }
-
-                if (initialTime > -1) {
-
-                    if (currentAcceleration < 0.02) {
-
-                        timesZero++;
-
-                        if (timesZero > 9) {
-
-                            resetStopwatch();
-                            timesZero = 0;
-
-                        }
-
-                    } else if ((initialTime > -1) && (timePassed() > 5000)) {
-
+                        resetStopwatch();
                         timesZero = 0;
-                        alarmOn = true;
 
                     }
+
+                } else if ((initialTime > -1) && (timePassed() > 5000)) {
+
+                    timesZero = 0;
+                    alarmOn = true;
 
                 }
 
@@ -175,11 +187,26 @@ public class extension extends Service implements SensorEventListener {
     public void onDestroy() {
 
         player.stop();
+        vibrator.cancel();
         alarmOn = false;
         resetStopwatch();
         timesZero = 0;
+        sensorManager.unregisterListener(this);
+        stopForeground(true);
         super.onDestroy();
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private String createNotificationChannel(NotificationManager notificationManager){
+        String channelId = "42";
+        String channelName = "My Foreground Service";
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+        // omitted the LED color
+        channel.setImportance(NotificationManager.IMPORTANCE_NONE);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        notificationManager.createNotificationChannel(channel);
+        return channelId;
     }
 
     @Nullable
@@ -187,4 +214,5 @@ public class extension extends Service implements SensorEventListener {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
 }
