@@ -18,14 +18,14 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public final class MainActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
 
     private Button button;
     private TextView acceleration;
     private SensorManager sensorManager;
     boolean off = true;
+    float[] arr;
+    int place = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,8 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
         acceleration = (TextView)findViewById(R.id.textView);
 
         button.setOnClickListener(this);
+
+        arr = new float[20000];
 
     }
 
@@ -89,12 +91,45 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
 
         currentAcceleration = (float) Math.round(currentAcceleration * 100f) / 100f;
 
-        acceleration.setText(String.valueOf(currentAcceleration));
+        //acceleration.setText(String.valueOf(currentAcceleration));
+
+        if (place < 20000) {
+
+            arr[place] = currentAcceleration;
+            place++;
+
+        }
+
+        float average = 0;
+        float sum = 0;
+
+        for (int i = 0; i < (place - 1); i++) {
+
+            sum = sum + arr[i];
+
+        }
+
+        average = sum / (place - 1);
+
+        acceleration.setText(String.valueOf(average + ", " + currentAcceleration));
 
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+
+        if (!off) {
+
+            stopService(new Intent(this, extension.class));
+
+        }
 
     }
 
