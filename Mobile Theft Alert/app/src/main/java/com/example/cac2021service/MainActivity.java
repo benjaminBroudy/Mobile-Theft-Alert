@@ -21,9 +21,12 @@ import android.widget.TextView;
 public final class MainActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
 
     private Button button;
+    private Button debugButton;
     private TextView acceleration;
     private SensorManager sensorManager;
     boolean off = true;
+    boolean debug = true;
+    boolean debug2 = false;
     float[] arr;
     int place = 0;
 
@@ -36,6 +39,8 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
         button = (Button) findViewById(R.id.button);
         button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
 
+        debugButton = (Button) findViewById(R.id.debugButton);
+
         sensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
@@ -43,6 +48,7 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
         acceleration = (TextView)findViewById(R.id.textView);
 
         button.setOnClickListener(this);
+        debugButton.setOnClickListener(this);
 
         arr = new float[20000];
 
@@ -52,21 +58,44 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View view) {
 
-        if (off) {
+        if (view == button) {
 
-            off = false;
-            button.setText("Enabled");
-            button.setBackgroundColor(Color.RED);
-            //startService(new Intent(this, extension.class));
-            startForegroundService(new Intent(this, extension.class));
+            if (off) {
 
-        } else {
+                off = false;
+                button.setText("Enabled");
+                button.setBackgroundColor(Color.RED);
+                //startService(new Intent(this, extension.class));
+                startForegroundService(new Intent(this, extension.class));
 
-            off = true;
-            button.setText("Disabled");
+            } else {
 
-            button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
-            stopService(new Intent(this, extension.class));
+                off = true;
+                button.setText("Disabled");
+
+                button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
+                stopService(new Intent(this, extension.class));
+
+            }
+
+        }
+
+        if (view == debugButton) {
+
+            if (debug) {
+
+                debug2 = true;
+                debug = false;
+                debugButton.setText("Reset");
+
+            } else {
+
+                debug2 = false;
+                debug = true;
+                place = 0;
+                debugButton.setText("Start");
+
+            }
 
         }
 
@@ -93,25 +122,29 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
 
         //acceleration.setText(String.valueOf(currentAcceleration));
 
-        if (place < 20000) {
+        if (debug2) {
 
-            arr[place] = currentAcceleration;
-            place++;
+            if (place < 20000) {
+
+                arr[place] = currentAcceleration;
+                place++;
+
+            }
+
+            float average = 0;
+            float sum = 0;
+
+            for (int i = 0; i < (place - 1); i++) {
+
+                sum = sum + arr[i];
+
+            }
+
+            average = sum / (place - 1);
+
+            acceleration.setText(String.valueOf(average));
 
         }
-
-        float average = 0;
-        float sum = 0;
-
-        for (int i = 0; i < (place - 1); i++) {
-
-            sum = sum + arr[i];
-
-        }
-
-        average = sum / (place - 1);
-
-        acceleration.setText(String.valueOf(average + ", " + currentAcceleration));
 
     }
 

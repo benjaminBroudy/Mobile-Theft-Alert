@@ -200,7 +200,7 @@ public class extension extends Service implements SensorEventListener {
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(NotificationManager notificationManager){
         String channelId = "42";
-        String channelName = "My Foreground Service";
+        String channelName = "Foreground Service Notification";
         NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
         // omitted the LED color
         channel.setImportance(NotificationManager.IMPORTANCE_NONE);
