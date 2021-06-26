@@ -41,7 +41,7 @@
         android:layout_marginRight="45dp"
         android:layout_marginBottom="180dp"
         android:gravity="center"
-        android:text="ACCELERATION (G FORCES)"
+        android:text="Average Acceleration, Seconds"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -12,23 +12,36 @@ import android.hardware.SensorManager;
 import android.hardware.SensorEventListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.widget.TextView;
 
+import java.sql.Time;
+import java.text.DecimalFormat;
+import java.util.concurrent.TimeUnit;
+
 public final class MainActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
 
     private Button button;
     private Button debugButton;
+
     private TextView acceleration;
+
     private SensorManager sensorManager;
+
     boolean off = true;
+
     boolean debug = true;
     boolean debug2 = false;
+
     float[] arr;
     int place = 0;
+
+    long startTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +97,18 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
 
             if (debug) {
 
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+                try {
+                    TimeUnit.SECONDS.sleep(4);
+                    vibrator.vibrate(VibrationEffect.createWaveform(new long[]{100, 1000, 100, 1000}, new int[]{255, 255, 255, 255}, -1));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 debug2 = true;
                 debug = false;
+                startTime = System.currentTimeMillis();
                 debugButton.setText("Reset");
 
             } else {
@@ -142,7 +165,7 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
 
             average = sum / (place - 1);
 
-            acceleration.setText(String.valueOf(average));
+            acceleration.setText(String.format("%.3f", Double.valueOf(average)) + ", " + ((System.currentTimeMillis() - startTime) / 1000));
 
         }
 
