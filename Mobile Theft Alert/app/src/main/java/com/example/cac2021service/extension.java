@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.os.Vibrator;
+import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -44,6 +45,8 @@ public class extension extends Service implements SensorEventListener {
 
     //should be low
     double threshold = 0.5;
+
+    ArrayList<Float> accelerationHistory = new ArrayList<Float>();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -134,7 +137,33 @@ public class extension extends Service implements SensorEventListener {
 
             }
 
+            System.out.println("Size: " + accelerationHistory.size());
+
             if (initialTime > -1) {
+
+                accelerationHistory.add(currentAcceleration);
+
+                float jerk = 0;
+                float sum = 0;
+
+                for (int i = 0; i < accelerationHistory.size(); i++) {
+
+                    sum = sum + accelerationHistory.get(i);
+
+                }
+
+                if ((timePassed() > 1000)) {
+
+                    jerk = sum / timePassed();
+                    jerk = jerk * 10;
+
+                } else {
+
+                    jerk = 0;
+
+                }
+
+                System.out.println("Jerk: " + jerk);
 
                 if (currentAcceleration < threshold) {
 
@@ -147,7 +176,7 @@ public class extension extends Service implements SensorEventListener {
 
                     }
 
-                } else if ((initialTime > -1) && (timePassed() > 5000)) {
+                } else if ((initialTime > -1) && (jerk > 0.3) && (accelerationHistory.size() > 10)) {
 
                     timesZero = 0;
                     alarmOn = true;
@@ -169,6 +198,7 @@ public class extension extends Service implements SensorEventListener {
     public void resetStopwatch() {
 
         initialTime = -1;
+        accelerationHistory.clear();
 
     }
 
