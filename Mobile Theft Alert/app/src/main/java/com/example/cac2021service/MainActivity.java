@@ -37,7 +37,8 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
     private Button button;
     private Button debugButton;
 
-    private TextView acceleration;
+    //change static to private
+    static TextView acceleration;
 
     private SensorManager sensorManager;
 

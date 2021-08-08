@@ -16,6 +16,9 @@ import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.os.Vibrator;
+import android.widget.Button;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
@@ -34,6 +37,8 @@ public class extension extends Service implements SensorEventListener {
     float accY = 0;
 
     float accZ = 0;
+
+    static float jerk = 0;
 
     int timesZero = 0;
 
@@ -102,15 +107,15 @@ public class extension extends Service implements SensorEventListener {
         accZ = event.values[2];
 
         if (alarmOn) {
-
-            AudioManager manager = null;
+//UNCOMMENT AT SOME POINT
+        /*    AudioManager manager = null;
 
             manager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
             manager.setStreamVolume(AudioManager.STREAM_MUSIC, manager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 
             player.setVolume(1, 1);
             player.start();
-            vibrator.vibrate(100);
+            vibrator.vibrate(100); */
 
         } else {
 
@@ -151,7 +156,7 @@ public class extension extends Service implements SensorEventListener {
 
                 accelerationHistory.add(currentAcceleration);
 
-                float jerk = 0;
+                jerk = 0;
                 float sum = 0;
 
                 for (int i = 0; i < accelerationHistory.size(); i++) {
@@ -172,6 +177,8 @@ public class extension extends Service implements SensorEventListener {
                 }
 
                 System.out.println("Jerk: " + jerk);
+                //delete at some point
+                MainActivity.acceleration.setText(String.valueOf(jerk));
 
                 if (currentAcceleration < threshold) {
 
