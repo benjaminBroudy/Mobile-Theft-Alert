@@ -3,10 +3,12 @@ package com.example.cac2021service;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -53,6 +55,9 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(Color.parseColor("#5e9c00")));
+
         button = (Button) findViewById(R.id.button);
         button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
 
@@ -87,6 +92,8 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
                 off = false;
                 button.setText("Alarm On");
                 button.setBackgroundColor(Color.RED);
+                getSupportActionBar().setBackgroundDrawable(
+                        new ColorDrawable(Color.RED));
                 //startService(new Intent(this, extension.class));
                 startForegroundService(new Intent(this, extension.class));
 
@@ -95,6 +102,8 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
                 off = true;
                 button.setText("Alarm Off");
                 button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
+                getSupportActionBar().setBackgroundDrawable(
+                        new ColorDrawable(Color.parseColor("#5e9c00")));
                 stopService(new Intent(this, extension.class));
 
             }

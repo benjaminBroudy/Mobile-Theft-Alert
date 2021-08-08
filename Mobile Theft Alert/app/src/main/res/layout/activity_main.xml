@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.397"
-        app:strokeColor="#000000"
+        app:strokeColor="#FFFFFF"
         app:strokeWidth="2dp" />
 
     <TextView
@@ -51,11 +51,11 @@
         android:gravity="center"
         android:text="average acceleration seconds"
         android:textSize="24sp"
-        android:visibility="gone"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="gone" />
+        app:layout_constraintStart_toStartOf="parent"/>
+        <!--android:visibility="gone" tools:visibility="gone"/>-->
 
     <Button
         android:id="@+id/debugButton"
@@ -66,9 +66,9 @@
         android:layout_marginTop="32dp"
         android:gravity="center_horizontal"
         android:text="start"
-        android:visibility="gone"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+        <!--android:visibility="gone" tools:visibility="gone" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
