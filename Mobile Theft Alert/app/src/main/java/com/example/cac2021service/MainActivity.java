@@ -4,12 +4,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.hardware.SensorEventListener;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.sql.Time;
@@ -43,6 +46,7 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
 
     long startTime = 0;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -65,6 +69,11 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
 
         arr = new float[20000];
 
+        AudioManager manager = null;
+
+        manager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        manager.setStreamVolume(AudioManager.STREAM_MUSIC, manager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -85,7 +94,6 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
 
                 off = true;
                 button.setText("Disabled");
-
                 button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
                 stopService(new Intent(this, extension.class));
 
