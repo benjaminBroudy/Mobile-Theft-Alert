@@ -18,7 +18,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.Html;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -52,11 +55,14 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        this.getWindow().setStatusBarColor(Color.WHITE);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(Color.parseColor("#5e9c00")));
+                new ColorDrawable(Color.parseColor("#1ebd21")));
 
         button = (Button) findViewById(R.id.button);
         button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
@@ -103,7 +109,7 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
                 button.setText("Alarm Off");
                 button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
                 getSupportActionBar().setBackgroundDrawable(
-                        new ColorDrawable(Color.parseColor("#5e9c00")));
+                        new ColorDrawable(Color.parseColor("#1ebd21")));
                 stopService(new Intent(this, extension.class));
 
             }
