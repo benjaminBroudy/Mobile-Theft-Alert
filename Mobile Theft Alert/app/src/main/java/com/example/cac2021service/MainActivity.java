@@ -85,7 +85,7 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
             if (off) {
 
                 off = false;
-                button.setText("Enabled");
+                button.setText("Alarm On");
                 button.setBackgroundColor(Color.RED);
                 //startService(new Intent(this, extension.class));
                 startForegroundService(new Intent(this, extension.class));
@@ -93,7 +93,7 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
             } else {
 
                 off = true;
-                button.setText("Disabled");
+                button.setText("Alarm Off");
                 button.setBackgroundColor(android.graphics.Color.parseColor("#1ebd31"));
                 stopService(new Intent(this, extension.class));
 

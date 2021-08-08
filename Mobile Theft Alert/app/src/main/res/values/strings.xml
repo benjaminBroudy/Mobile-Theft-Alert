@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Mobile Theft Alert</string>
+    <string name="disabled">Disabled</string>
+    <string name="helpmeeee">helpmeeee</string>
+    <string name="start">Start</string>
+    <string name="average_acceleration_seconds">Average Acceleration, Seconds</string>
 </resources>
