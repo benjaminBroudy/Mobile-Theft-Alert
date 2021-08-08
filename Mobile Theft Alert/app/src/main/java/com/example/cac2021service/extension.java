@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
@@ -51,7 +52,8 @@ public class extension extends Service implements SensorEventListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        player = MediaPlayer.create(this, Settings.System.DEFAULT_ALARM_ALERT_URI);
+        //player = MediaPlayer.create(this, Settings.System.DEFAULT_ALARM_ALERT_URI);
+        player = MediaPlayer.create(this, R.raw.alert);
         player.setLooping(true);
 
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -101,6 +103,7 @@ public class extension extends Service implements SensorEventListener {
 
         if (alarmOn) {
 
+            player.setVolume(1, 1);
             player.start();
             vibrator.vibrate(100);
 
