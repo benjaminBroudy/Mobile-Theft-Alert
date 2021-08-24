@@ -6,6 +6,9 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -80,9 +83,11 @@ public class extension extends Service implements SensorEventListener {
         String channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? createNotificationChannel(notificationManager) : "";
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId);
         Notification notification = notificationBuilder.setOngoing(true)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.icon4)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .setContentText("Alarm Enabled")
+                .setContentTitle("Alarm Enabled")
+                .setColorized(true)
+                .setColor(Color.RED)
                 .build();
 
         startForeground(42, notification);
@@ -191,7 +196,7 @@ public class extension extends Service implements SensorEventListener {
 
                     }
 
-                } else if ((initialTime > -1) && (jerk > 0.3) && (accelerationHistory.size() > 10)) {
+                } else if ((initialTime > -1) && (jerk > 0.25) && (accelerationHistory.size() > 10)) {
 
                     timesZero = 0;
                     alarmOn = true;
