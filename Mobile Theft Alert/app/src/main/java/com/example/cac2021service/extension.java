@@ -113,14 +113,14 @@ public class extension extends Service implements SensorEventListener {
 
         if (alarmOn) {
 //UNCOMMENT AT SOME POINT
-        /*    AudioManager manager = null;
+            AudioManager manager = null;
 
             manager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
             manager.setStreamVolume(AudioManager.STREAM_MUSIC, manager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 
             player.setVolume(1, 1);
             player.start();
-            vibrator.vibrate(100); */
+            vibrator.vibrate(100);
 
         } else {
 
