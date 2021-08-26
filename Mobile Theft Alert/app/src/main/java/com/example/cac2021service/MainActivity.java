@@ -101,7 +101,6 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
                 button.setBackgroundColor(Color.RED);
                 getSupportActionBar().setBackgroundDrawable(
                         new ColorDrawable(Color.RED));
-                //startService(new Intent(this, extension.class));
                 startForegroundService(new Intent(this, extension.class));
 
             } else {

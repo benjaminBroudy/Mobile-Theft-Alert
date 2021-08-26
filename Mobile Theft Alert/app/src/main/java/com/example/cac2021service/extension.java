@@ -112,7 +112,7 @@ public class extension extends Service implements SensorEventListener {
         accZ = event.values[2];
 
         if (alarmOn) {
-//UNCOMMENT AT SOME POINT
+
             AudioManager manager = null;
 
             manager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -182,7 +182,7 @@ public class extension extends Service implements SensorEventListener {
                 }
 
                 System.out.println("Jerk: " + jerk);
-                //delete at some point
+
                 MainActivity.acceleration.setText(String.valueOf(jerk));
 
                 if (currentAcceleration < threshold) {
