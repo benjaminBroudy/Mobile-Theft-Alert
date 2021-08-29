@@ -196,7 +196,7 @@ public class extension extends Service implements SensorEventListener {
 
                     }
 
-                } else if ((initialTime > -1) && (jerk > 0.25) && (accelerationHistory.size() > 10)) {
+                } else if ((initialTime > -1) && (jerk > 0.2) && (accelerationHistory.size() > 4)) {
 
                     timesZero = 0;
                     alarmOn = true;
